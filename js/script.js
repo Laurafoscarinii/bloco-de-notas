@@ -25,7 +25,7 @@ btnSaveNote.addEventListener("click", (evt) =>{
     evt.preventDefault();
     data = { 
         id: document.querySelector("#input-id").value,
-        title: document.querySelector("#input-title").value , 
+        title: document.querySelector("#input-title").value, 
         content: document.querySelector("#input-content").value
     }
 
@@ -38,27 +38,62 @@ btnSaveNote.addEventListener("click", (evt) =>{
 
 
 const saveNote = (note) =>{
+
+    let notes = loadNotes();
+
+    if(note.id.trim().length < 1){
+        note.id = new Date().getTime();
+    }else{
+        //?
+    }
+
+    note.lastTime = new Date().getTime();
     console.log(note);
-    let notes = localStorage.getItem("notes");
-    
+    notes.push(note);
+    notes = JSON.stringify(notes);
+    localStorage.setItem('notes', notes)
+
+};
+
+const loadNotes = () => {
+
+    let notes = localStorage.getItem('notes');
+
     if(!notes){
         notes = [];
     }else{
         notes = JSON.parse(notes);
     }
+    return notes;
+}
 
-    if(notes.id.length < 1){
-        note.id = new Date().getTime();
-    }else{
+const listNotes = () =>{
+    let listNotes = loadNotes();
+    listNotes.forEach((note) => {
+        let divCard = document.createElement('div');
+        divCard.className = 'card';
+        divCard.style.width = '25rem';
+        let divCardBody = document.createElement('div');
+        divCardBody.className = 'card-body';
+        divCard.appendChild(divCardBody);
+        let h5 = document.createElement ('h5');
+        h5.innerText = note.title;
+        divCardBody.appendChild(h5);
+        let paragrafo = document.createElement('paragrafo');
+        paragrafo.innerText = note.content;
+        divCardBody.appendChild(paragrafo);
+        let time = new Date(note.lastTime);
+        time = time.toLocaleDateString("pt-BR");
+        console.log(time);
+        let pData = document.createElement('p');
+        pData.innerText = time;
+        divCardBody.appendChild(pData);
+        
 
-    }
+        notes.appendChild (divCard);
 
-    note.lastTime = new Date().getTime();
+    });
+}
 
-    notes.push(note);
 
-    notes = JSON.stringify(notes);
-
-    localStorage.setItem("notes", notes)
-
-};
+listNotes();
