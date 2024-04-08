@@ -147,7 +147,20 @@ const showNote = (note)=>{
     document.querySelector('#controls-note').appendChild(divExcluir);
     divExcluir.addEventListener("click", (evt) =>{
         evt.preventDefault();
+        if (confirm("Tem certeza que deseja excluir esta nota?")) {
+            deleteNote(note.id);
+        }
+     
     })
+
+    
+    const deleteNote = (noteId) => {
+        let notes = loadNotes();
+        notes = notes.filter(note => note.id != noteId);
+        notes = JSON.stringify(notes);
+        localStorage.setItem('notes', notes);
+        listNotes();
+    };
 };
 
 
